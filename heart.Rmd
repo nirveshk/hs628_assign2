@@ -1,0 +1,32 @@
+---
+title: "heart"
+author: "Choi Kwun Yu"
+date: "6/7/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r Part 1: reading in heart}
+heart <- read.csv("heart.csv", header = TRUE, na.strings = "?")
+summary(heart)
+str(heart)
+```
+
+```{r changing to numeric/factor}
+heart$sex <- as.factor(heart$sex)
+summary(heart)
+```
+
+```{r}
+fit_num_all <- lm(num ~ ., data=heart)
+summary(fit_num_all)
+```
+
+```{r}
+
+```
+
