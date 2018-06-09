@@ -16,17 +16,87 @@ summary(heart)
 str(heart)
 ```
 
-```{r changing to numeric/factor}
-heart$sex <- as.factor(heart$sex)
+```{r}
+heart$trestbps[heart$trestbps == -9.0] <- NA
+heart$fbs[heart$fbs == -9] <- NA
+heart$restecg[heart$restecg == -9] <- NA
+heart$thalach[heart$thalach == -9.0] <- NA
+heart$exang[heart$exang == -9] <- NA
+heart$slope[heart$slope == -9] <- NA
+heart$ca[heart$ca == -9] <- NA
+heart$thal[heart$thal == -9] <- NA
+
 summary(heart)
 ```
 
-```{r}
-fit_num_all <- lm(num ~ ., data=heart)
+
+```{r linear regression model all}
+fit_num_all <- lm(num ~ ., data = heart)
 summary(fit_num_all)
 ```
 
 ```{r}
+summary(na.omit(heart))
+nrow(na.omit(heart))
+```
 
+
+```{r linear regression model 1}
+fit_num_1 <- lm(num ~ age + sex + cp + trestbps + chol + fbs + restecg + thalach + exang + oldpeak + slope + thal, data = heart)
+summary(fit_num_1)
+```
+
+```{r linear regression model 2}
+fit_num_2 <- lm(num ~ age + sex + cp + trestbps + chol + fbs + restecg + thalach + exang + oldpeak + slope, data = heart)
+summary(fit_num_2)
+```
+
+Examine the descriptions of predictor variables below to see which are categorical (can hold only a discrete number of values). List the categorical variables that are boolean (can hold only two values). List the other categorical variables (those that can hold more than two values).What type did R assign to the categorical variables? Modify the non-boolean categorical predictorvariables(this does not include num)so they are represented as factor variables.
+
+Boolean: sex, fbs, exang
+Categorical: cp, restecg, slope, thal
+
+```{r changing non-boolean variables to factors}
+heart$cp <- factor(heart$cp)
+heart$restecg <- factor(heart$restecg)
+heart$slope <- factor(heart$slope)
+heart$thal <- factor(heart$thal)
+```
+
+```{r linear regression model 3}
+fit_num_3 <- lm(num ~ age + sex + cp + trestbps + chol + fbs + restecg + thalach + exang + oldpeak + slope, data = heart)
+summary(fit_num_3)
+```
+
+```{r changed boolean categorical variables to factors}
+heart$sex <- factor(heart$sex)
+heart$fbs <- factor(heart$fbs)
+heart$exang <- factor(heart$exang)
+```
+
+```{r linear regression model 4}
+fit_num_4 <- lm(num ~ age + sex + cp + trestbps + chol + fbs + restecg + thalach + exang + oldpeak + slope, data = heart)
+summary(fit_num_4)
+```
+
+```{r making a new variable}
+heart$num2[heart$num == 0] <- 0
+heart$num2[heart$num != 0] <- 1
+```
+
+```{r linear regression model fit_num_slope_oldpeak_sex}
+fit_num_slope_oldpeak_sex <- lm(num ~ slope + oldpeak + sex, data = heart)
+summary(fit_num_slope_oldpeak_sex)
+```
+
+```{r linear regression model fit_num2_slope_oldpeak_sex}
+fit_num2_slope_oldpeak_sex <- lm(num2 ~ slope + oldpeak + sex, data = heart)
+summary(fit_num_slope_oldpeak_sex)
+```
+
+```{r plotting}
+plot(fit_num_1, 1) 
+plot(fit_num_slope_oldpeak_sex, 1)
+plot(fit_num2_slope_oldpeak_sex, 1)
 ```
 
