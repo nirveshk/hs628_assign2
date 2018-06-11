@@ -1,0 +1,162 @@
+---
+title: "Heart"
+author: "Nirvesh"
+date: "6/7/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+```{r}
+myfile <- read.csv("heart.csv", header = TRUE)
+myfile
+summary(myfile)
+str(myfile)
+
+```
+
+```{r}
+myfile[myfile == "?"] <- NA
+str(myfile)
+```
+```{r}
+myfile$chol <- as.numeric(as.character(myfile$chol))
+myfile$sex  <- as.factor(myfile$sex )
+myfile2 <-myfile
+str(myfile2)
+
+```
+
+
+
+```{r}
+fit_num_all <- lm(num~., data = myfile2)
+summary(fit_num_all)
+```
+
+```{r}
+na.omit(myfile2)
+myfile3 <- na.omit(myfile2)
+str(myfile3)
+```
+
+```{r}
+nrow(myfile3)
+```
+
+
+Variable that is entirely NA is column "ca" with value of -9, here we drop this column to get 13 dimensional data
+```{r}
+myfile3$ca <- NULL
+myfile4 <- myfile3
+str(myfile4)
+```
+
+
+```{r}
+fit_num_1 <-lm(num~., data = myfile4)
+summary(fit_num_1)
+```
+
+
+
+Variable that is mostly NA is thal.Hence removing thal from the dataset per the requirement
+```{r}
+myfile4$thal <- NULL
+myfile5 <- myfile4
+str(myfile5)
+```
+
+
+```{r}
+fit_num_2 <- lm(num~., data = myfile5)
+summary(fit_num_2)
+```
+
+
+
+Examine the descriptions of predictor variables below to see which are categorical
+(can hold only a discrete number of values). List the categorical variables that are
+boolean (can hold only two values). List the other categorical variables (those that
+can hold more than two values). What type did R assign to the categorical
+variables? Modify the non-boolean categorical predictor variables (this does not
+include num) so they are represented as factor variables.
+
+
+
+**List the categorical variables that are boolean (can hold only two values): sex, fbs, exang
+
+**List the other categorical variables (those that can hold more than two values): cp, restecg, slope and thal
+
+** What type did R assign to the categorical variables? R assigned type "int" to the categorical data
+
+**Modify the non-boolean categorical predictor variables (this does not include num) so they are represented as factor variables: there are 4 non boolean categorical variables( cp, restecg, slope and thal). 
+```{r}
+myfile4$cp <- as.factor(myfile4$cp)
+myfile4$restecg <- as.factor(myfile4$restecg)
+myfile4$slope <- as.factor(myfile4$slope)
+myfile4$thal <- as.factor(myfile4$thal)
+```
+
+since thal is not availbale in myfile5, I chose to do linear regression for converted variables in myfile4
+```{r}
+fit_num_3 <- lm(num~., data = myfile4)
+summary(fit_num_3)
+```
+
+
+
+Modify the boolean categorical variables, (there are 3 of them), so they are represented as factor variables: Three predictor boolean categorical variables are sex, fbs and exang
+
+```{r}
+myfile4$sex <- as.factor(myfile4$sex)
+myfile4$fbs <- as.factor(myfile4$fbs)
+myfile4$exang <- as.factor(myfile4$exang)
+fit_num_4 <- lm(num~., data = myfile4)
+str(fit_num_4)
+
+```
+
+
+```{r}
+myfile4$num2 <-myfile4$num
+myfilex <- myfile4
+str(myfilex)
+```
+
+
+```{r}
+myfilex$num2[myfilex$num == 2] <- 1
+myfilex$num2[myfilex$num == 3] <- 1
+myfilex$num2[myfilex$num == 4] <- 1
+myfilex$num2 <- as.numeric(as.character(myfilex$num2))
+str(myfilex)
+```
+
+```{r}
+fit_num_slope_oldpeak_sex <- lm(num~ slope + oldpeak + sex, data = myfilex)
+summary(fit_num_slope_oldpeak_sex)
+```
+
+```{r}
+fit_num2_slope_oldpeak_sex <- lm(num2~ slope + oldpeak + sex, data = myfilex)
+str(fit_num2_slope_oldpeak_sex)
+summary(fit_num2_slope_oldpeak_sex)
+```
+
+
+```{r}
+plot(fit_num_1, 1
+plot(fit_num_slope_oldpeak_sex, 1)
+plot(fit_num2_slope_oldpeak_sex, 1)
+```
+
